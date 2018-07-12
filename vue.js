@@ -812,6 +812,7 @@ function cloneVNode (vnode) {
 
 var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);
+console.log(arrayMethods)
 
 var methodsToPatch = [
   'push',
@@ -877,7 +878,6 @@ var Observer = function Observer (value) {
   this.dep = new Dep();
   this.vmCount = 0;
   def(value, '__ob__', this);
-  console.log(value)
   if (Array.isArray(value)) {
     var augment = hasProto
       ? protoAugment
