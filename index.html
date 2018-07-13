@@ -16,49 +16,51 @@
             data: {
                 a: {
                     b: 2
-                }
+                },
+                c: [1,3,5]
             },
             beforeCreate() {
                 console.log(this._data)
             },
             created() {
-                console.log(this._data)
+                this._data.c.push(33)
+                console.log(this._data.c)
             }
         });
-        console.log(new Vue({
-            data: {
-                c: [1,3],
-                a: {
-                    b: 1
-                }
-            }
-        }))
-        const mutationMethods = [
-            'push',
-            'pop',
-            'shift',
-            'unshift',
-            'splice',
-            'sort',
-            'reverse'
-        ]
+        // console.log(new Vue({
+        //     data: {
+        //         c: [1,3],
+        //         a: {
+        //             b: 1
+        //         }
+        //     }
+        // }))
+        // const mutationMethods = [
+        //     'push',
+        //     'pop',
+        //     'shift',
+        //     'unshift',
+        //     'splice',
+        //     'sort',
+        //     'reverse'
+        // ]
 
-        const arrayMethods = Object.create(Array.prototype) // 实现 arrayMethods.__proto__ === Array.prototype
-        const arrayProto = Array.prototype // 缓存 Array.prototype
+        // const arrayMethods = Object.create(Array.prototype) // 实现 arrayMethods.__proto__ === Array.prototype
+        // const arrayProto = Array.prototype // 缓存 Array.prototype
 
-        mutationMethods.forEach(method => {
-            arrayMethods[method] = function (...args) {
-                const result = arrayProto[method].apply(this, args)
+        // mutationMethods.forEach(method => {
+        //     arrayMethods[method] = function (...args) {
+        //         const result = arrayProto[method].apply(this, args)
 
-                console.log(`执行了代理原型的 ${method} 函数`)
+        //         console.log(`执行了代理原型的 ${method} 函数`)
 
-                return result
-            }
-        })
-        const arr = []
-        arr.__proto__ = arrayMethods
+        //         return result
+        //     }
+        // })
+        // const arr = []
+        // arr.__proto__ = arrayMethods
 
-        arr.push(1)
+        // arr.push(1)
     </script>
 </body>
 

@@ -812,7 +812,6 @@ function cloneVNode (vnode) {
 
 var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);
-console.log(arrayMethods)
 
 var methodsToPatch = [
   'push',
