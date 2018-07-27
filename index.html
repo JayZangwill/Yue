@@ -17,7 +17,7 @@
                 a: {
                     b: 2
                 },
-                c: [1,3,5]
+                c: [1, [3, 4], 5]
             },
             beforeCreate() {
                 console.log(this._data)
@@ -27,14 +27,14 @@
                 console.log(this._data.c)
             }
         });
-        // console.log(new Vue({
-        //     data: {
-        //         c: [1,3],
-        //         a: {
-        //             b: 1
-        //         }
-        //     }
-        // }))
+        console.log(new Vue({
+            data: {
+                c: [1, 3],
+                a: {
+                    b: 1
+                }
+            }
+        }))
         // const mutationMethods = [
         //     'push',
         //     'pop',

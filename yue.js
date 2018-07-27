@@ -31,7 +31,7 @@
       new Observer (data);
     }
   }
-
+  // 储存数组的编译方法
   var methodKeys = [
     'push',
     'pop',
@@ -61,13 +61,14 @@
     if (!Array.isArray (data)) {
       this.walk (data);
     } else {
-      // 将变异方法覆盖到数据上
+      // 将变异方法覆盖到数组数据上
       argument (data, arrayMethods, methodKeys);
       // 深度观察数据
       this.observeArray (data);
     }
   }
 
+  // 用于给对象加上get和set
   Observer.prototype.walk = function (data) {
     var keys = Object.keys (data);
     for (var i = 0; i < keys.length; i++) {
