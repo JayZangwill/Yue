@@ -1,34 +1,34 @@
 (function (window) {
-  function Yue (options) {
+  function Yue(options) {
     if (!(this instanceof Yue)) {
-      console.error ('error');
+      console.error('error');
       return;
     }
-    this._init (options);
+    this._init(options);
   }
   Yue.prototype._init = function (options) {
     var vm = this;
     vm.$options = options;
-    this._callHook ('beforeCreate', vm);
-    this.initData (vm);
-    this._callHook ('created', vm);
+    this._callHook('beforeCreate', vm);
+    this.initData(vm);
+    this._callHook('created', vm);
   };
   Yue.prototype._callHook = function (hook, vm) {
     var options = this.$options;
-    options[hook] && options[hook].call (vm, vm);
+    options[hook] && options[hook].call(vm, vm);
   };
   Yue.prototype.initData = function (vm) {
     var options = vm.$options;
     var data = (vm._data = options.data);
-    observe (data);
+    observe(data);
   };
 
-  function observe (data) {
+  function observe(data) {
     if (typeof data !== 'object' || data.__ob__) {
       return;
     }
-    if (Array.isArray (data) || isPlainObject (data)) {
-      new Observer (data);
+    if (Array.isArray(data) || isPlainObject(data)) {
+      new Observer(data);
     }
   }
   // 储存数组的编译方法
@@ -43,63 +43,71 @@
   ];
   var arrayMethods = {};
   var arrayProto = Array.prototype;
-  methodKeys.forEach (function (method) {
+  methodKeys.forEach(function (method) {
     var original = arrayProto[method];
-    Object.defineProperty (arrayMethods, method, {
+    Object.defineProperty(arrayMethods, method, {
       enumerable: true,
       configurable: false,
       value: function () {
-        var result = original.apply (this, arguments);
+        var args = Array.prototype.slice.call(arguments, 0);
+        var inserted;
+        if (method === 'push' || method === 'unshift') {
+          inserted = args;
+        } else if (method === 'splice') {
+          inserted = args.slice(2);
+        }
+        inserted && this.__ob__.observeArray(inserted);
+        var result = original.apply(this, arguments);
         return result;
       },
     });
   });
 
-  function Observer (data) {
+  function Observer(data) {
     this.data = data;
-    defaultProperty (data, '__ob__', this);
-    if (!Array.isArray (data)) {
-      this.walk (data);
+    defaultProperty(data, '__ob__', this);
+    if (!Array.isArray(data)) {
+      this.walk(data);
     } else {
       // 将变异方法覆盖到数组数据上
-      argument (data, arrayMethods, methodKeys);
+      argument(data, arrayMethods, methodKeys);
       // 深度观察数据
-      this.observeArray (data);
+      this.observeArray(data);
     }
   }
 
   // 用于给对象加上get和set
   Observer.prototype.walk = function (data) {
-    var keys = Object.keys (data);
+    var keys = Object.keys(data);
     for (var i = 0; i < keys.length; i++) {
-      defineReactive (data, keys[i]);
+      defineReactive(data, keys[i]);
     }
   };
 
   Observer.prototype.observeArray = function (data) {
     for (var i = 0; i < data.length; i++) {
-      observe (data[i]);
+      observe(data[i]);
     }
   };
 
-  function argument (target, arrayMethods, keys) {
+  function argument(target, arrayMethods, keys) {
     for (var i = 0; i < keys.length; i++) {
-      defaultProperty (target, keys[i], arrayMethods[keys[i]]);
+      defaultProperty(target, keys[i], arrayMethods[keys[i]]);
     }
   }
 
-  function defaultProperty (target, key, value) {
-    Object.defineProperty (target, key, {
+  function defaultProperty(target, key, value) {
+    Object.defineProperty(target, key, {
       configurable: true,
       enumerable: false,
       value: value,
     });
   }
 
-  function defineReactive (target, key) {
+  function defineReactive(target, key) {
     var val = target[key];
-    observe (val);
-    Object.defineProperty (target, key, {
+    observe(val);
+    Object.defineProperty(target, key, {
       configurable: true,
       enumerable: true,
       get: function () {
@@ -110,13 +118,13 @@
           return;
         }
         val = newVal;
-        observe (newVal);
+        observe(newVal);
       },
     });
   }
 
-  function isPlainObject (obj) {
-    return Object.prototype.toString.call (obj) === '[object Object]';
+  function isPlainObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]';
   }
   window.Yue = Yue;
-}) (window);
+})(window);

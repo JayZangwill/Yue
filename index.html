@@ -23,7 +23,7 @@
                 console.log(this._data)
             },
             created() {
-                this._data.c.push(33)
+                this._data.c.splice(0, 1)
                 console.log(this._data.c)
             }
         });
@@ -33,6 +33,9 @@
                 a: {
                     b: 1
                 }
+            },
+            created() {
+                this.c.splice(0, 1)
             }
         }))
         // const mutationMethods = [
