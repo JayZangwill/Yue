@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <div id="app">{{c[0]}}</div>
     <script src="vue.js"></script>
     <script src="yue.js"></script>
     <script>
@@ -17,17 +18,14 @@
                 a: {
                     b: 2
                 },
-                c: [1, [3, 4], 5]
+                c: [1, {
+                    a: 13
+                }, 5]
             },
-            beforeCreate() {
-                console.log(this._data)
-            },
-            created() {
-                this._data.c.splice(0, 1)
-                console.log(this._data.c)
-            }
+            created() {}
         });
-        console.log(new Vue({
+        var vm2 = new Vue({
+            el: '#app',
             data: {
                 c: [1, 3],
                 a: {
@@ -35,9 +33,8 @@
                 }
             },
             created() {
-                this.c.splice(0, 1)
             }
-        }))
+        })
         // const mutationMethods = [
         //     'push',
         //     'pop',

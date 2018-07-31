@@ -20,16 +20,23 @@
   Yue.prototype.initData = function (vm) {
     var options = vm.$options;
     var data = (vm._data = options.data);
-    observe(data);
+    observe(data, true);
   };
 
-  function observe(data) {
-    if (typeof data !== 'object' || data.__ob__) {
+  function observe(data, isRootDate) {
+    if (typeof data !== 'object') {
       return;
     }
-    if (Array.isArray(data) || isPlainObject(data)) {
-      new Observer(data);
+    var ob;
+    if (hasOwn(data, '__ob__')) {
+      ob = data.__ob__;
+    } else if (Array.isArray(data) || isPlainObject(data)) {
+      ob = new Observer(data);
     }
+    if (isRootDate && ob) {
+      ob.vmCount++;
+    }
+    return ob;
   }
   // 储存数组的编译方法
   var methodKeys = [
@@ -64,7 +71,8 @@
   });
 
   function Observer(data) {
-    this.data = data;
+    this.value = data;
+    this.vmCount = 0;
     defaultProperty(data, '__ob__', this);
     if (!Array.isArray(data)) {
       this.walk(data);
@@ -106,7 +114,8 @@
 
   function defineReactive(target, key) {
     var val = target[key];
-    observe(val);
+    let childOb = observe(val);
+    console.log(childOb, target);
     Object.defineProperty(target, key, {
       configurable: true,
       enumerable: true,
@@ -125,6 +134,10 @@
 
   function isPlainObject(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
+  }
+
+  function hasOwn(obj, key) {
+    return obj.hasOwnProperty(key);
   }
   window.Yue = Yue;
 })(window);
