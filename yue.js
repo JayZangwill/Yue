@@ -115,7 +115,6 @@
   function defineReactive(target, key) {
     var val = target[key];
     let childOb = observe(val);
-    console.log(childOb, target);
     Object.defineProperty(target, key, {
       configurable: true,
       enumerable: true,
@@ -123,7 +122,7 @@
         return val;
       },
       set: function (newVal) {
-        if (newVal === val || (newVal !== newVal && val !== val)) {
+        if (newVal === val || (newVal !== newVal && val !== val)) { // 后面的判断是排除NaN
           return;
         }
         val = newVal;

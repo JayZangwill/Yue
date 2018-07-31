@@ -25,15 +25,15 @@
             created() {}
         });
         var vm2 = new Vue({
-            el: '#app',
+            el: "#app",
             data: {
                 c: [1, 3],
                 a: {
                     b: 1
-                }
+                },
+                d: 1
             },
-            created() {
-            }
+            created() {}
         })
         // const mutationMethods = [
         //     'push',
@@ -61,6 +61,17 @@
         // arr.__proto__ = arrayMethods
 
         // arr.push(1)
+        var addTwoNumbers = function (l1, l2) {
+            var result = [],
+                add = false,
+                temp = 0;
+            for (var i = l1.length; i--;) {
+                temp = temp >= 10 ? 1 : 0;
+                temp += l1[i] + l2[i];
+                result.push(temp >= 10 ? temp % 10 : temp);
+            }
+            return result;
+        };
     </script>
 </body>
 
