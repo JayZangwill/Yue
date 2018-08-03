@@ -18,10 +18,15 @@
     options[hook] && options[hook].call(vm, vm);
   };
   Yue.prototype.initData = function (vm) {
+    vm._watchers = [];
     var options = vm.$options;
     var data = (vm._data = options.data);
     observe(data, true);
   };
+
+  Yue.prototype.$watch = function (targetPath, cb) {
+    new Watcher(this, targetPath, cd);
+  }
 
   function observe(data, isRootDate) {
     if (typeof data !== 'object') {
@@ -98,6 +103,48 @@
     }
   };
 
+  var watcherUid = 0;
+
+  function Watcher(vm, expOrFn, cb, options) {
+    this.vm = vm;
+    this.id = ++watcherUid;
+    this.newDep = [];
+    this.newDepIds = new Set();
+    vm._watchers.push(this);
+    this.getter = parsePath(expOrFn);
+    if (!this.get) {
+      console.error('parse path error!');
+    }
+    this.value = this.get();
+  }
+
+  Watcher.prototype.get = function () {
+    return this.getter.call(this.vm, this.vm);
+  }
+
+  var depUid = 0;
+
+  function Dep() {
+    this.id = depUid++;
+    this.subs = [];
+  }
+
+  Dep.prototype.addSub = function (sub) {
+    this.subs.push(sub);
+  }
+
+  Dep.prototype.depend = function () {
+    if (Dep.target) {
+      Dep.target.addDep(this);
+    }
+  }
+
+  Dep.prototype.notify = function () {
+    for (var i = 0, l = this.subs.length; i < l; i++) {
+      this.subs[i].update()
+    }
+  }
+
   function argument(target, arrayMethods, keys) {
     for (var i = 0; i < keys.length; i++) {
       defaultProperty(target, keys[i], arrayMethods[keys[i]]);
@@ -129,6 +176,20 @@
         observe(newVal);
       },
     });
+  }
+
+  function parsePath(path) {
+    var exp = /[^\w.$]/; // 排除不符合表达式的情况，类似 w~w，%等
+    if (exp.test(path)) {
+      return;
+    }
+    path = path.split('.');
+    return function (obj) {
+      for (var i = 0; i < path.length; i++) {
+        obj = obj[path[i]];
+      }
+      return obj;
+    }
   }
 
   function isPlainObject(obj) {

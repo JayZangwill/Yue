@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="app">{{c[0]}}</div>
+    <div id="app">{{name}}</div>
     <script src="vue.js"></script>
     <script src="yue.js"></script>
     <script>
@@ -31,36 +31,18 @@
                 a: {
                     b: 1
                 },
-                d: 1
+                name: 1
             },
-            created() {}
+            mounted() {
+                this.name = 'hc1';
+                this.$nextTick(() => {
+                    this.$nextTick(() => {
+                        console.log('第二个 $nextTick')
+                    })
+                    this.name = 'hcy'
+                })
+            }
         })
-        // const mutationMethods = [
-        //     'push',
-        //     'pop',
-        //     'shift',
-        //     'unshift',
-        //     'splice',
-        //     'sort',
-        //     'reverse'
-        // ]
-
-        // const arrayMethods = Object.create(Array.prototype) // 实现 arrayMethods.__proto__ === Array.prototype
-        // const arrayProto = Array.prototype // 缓存 Array.prototype
-
-        // mutationMethods.forEach(method => {
-        //     arrayMethods[method] = function (...args) {
-        //         const result = arrayProto[method].apply(this, args)
-
-        //         console.log(`执行了代理原型的 ${method} 函数`)
-
-        //         return result
-        //     }
-        // })
-        // const arr = []
-        // arr.__proto__ = arrayMethods
-
-        // arr.push(1)
         var addTwoNumbers = function (l1, l2) {
             var result = [],
                 add = false,
